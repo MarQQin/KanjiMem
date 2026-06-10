@@ -334,11 +334,14 @@ function updateFavButton() {
 function toggleFavourite(kanji, btnEl) {
   if (state.favourites.has(kanji)) {
     state.favourites.delete(kanji);
-    btnEl.classList.remove('is-fav');
   } else {
     state.favourites.add(kanji);
-    btnEl.classList.add('is-fav');
   }
+  // Sync ALL heart buttons for this kanji (paired cards)
+  const isFav = state.favourites.has(kanji);
+  document.querySelectorAll(`.card-btn.fav[data-kanji="${kanji}"]`).forEach(b => {
+    b.classList.toggle('is-fav', isFav);
+  });
   localStorage.setItem('favs', JSON.stringify([...state.favourites]));
   updateFavButton();
 }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.svg">
+  <link rel="stylesheet" href="style.css">
+  <title>漢字 Memory</title>
+</head>
+<body>
+
+  <!-- ===== GAME SCREEN ===== -->
+  <section id="screen-game" class="screen active">
+    <div id="board"></div>
+    <footer id="toolbar">
+      <button id="btn-restart" aria-label="Neu mischen">🔄</button>
+      <button id="btn-select" aria-label="Auswahl">⚙️</button>
+      <button id="btn-show"    aria-label="Alle anzeigen">👁</button>
+    </footer>
+  </section>
+
+  <!-- ===== SELECT SCREEN ===== -->
+  <section id="screen-select" class="screen">
+    <div class="select-scroll">
+      <h2>Klasse</h2>
+      <div class="select-row" id="grade-buttons">
+        <button data-set="grade1" class="set-btn active" title="Klasse 1">🐤</button>
+        <button data-set="grade2" class="set-btn" title="Klasse 2">🐔</button>
+        <button data-set="grade3" class="set-btn" title="Klasse 3">🦅</button>
+        <button data-set="grade4" class="set-btn" title="Klasse 4">🦉</button>
+      </div>
+
+      <h2>Thema</h2>
+      <div class="select-row" id="theme-buttons">
+        <button data-set="animals"  class="set-btn" title="Tiere">🐾</button>
+        <button data-set="birds"    class="set-btn" title="Vögel">🐦</button>
+        <button data-set="nature"   class="set-btn" title="Natur">🌳</button>
+        <button data-set="poetic"   class="set-btn" title="Poetisch">🌸</button>
+        <button data-set="earth"    class="set-btn" title="Erde">🌍</button>
+        <button data-set="man"      class="set-btn" title="Mensch">👤</button>
+        <button data-set="spirit"   class="set-btn" title="Geist">🔮</button>
+        <button data-set="music"    class="set-btn" title="Musik">🎵</button>
+        <button data-set="zeit"     class="set-btn" title="Zeit">⏳</button>
+      </div>
+
+      <h2>Favoriten</h2>
+      <div class="select-row">
+        <button data-set="favourites" class="set-btn fav-btn" title="Favoriten">❤️</button>
+      </div>
+
+      <h2>Brettgröße</h2>
+      <div class="select-row" id="size-buttons">
+        <button data-size="3" class="size-btn" title="3×3">3×3</button>
+        <button data-size="4" class="size-btn active" title="4×4">4×4</button>
+        <button data-size="5" class="size-btn" title="5×5">5×5</button>
+      </div>
+
+      <button id="btn-back" class="back-btn">← Zurück</button>
+    </div>
+  </section>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

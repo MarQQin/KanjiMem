@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="32" fill="#1a1a2e"/>
+  <rect x="16" y="16" width="160" height="160" rx="24" fill="#16213e"/>
+  <text x="96" y="128" text-anchor="middle"
+        font-family="'Noto Sans JP','Hiragino Sans','Yu Gothic',sans-serif"
+        font-size="110" font-weight="700" fill="#e94560">漢</text>
+</svg>

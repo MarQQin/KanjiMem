@@ -1,0 +1,323 @@
+/* style.css — Kanji Memory PWA */
+
+/* ───── Custom Properties ───── */
+:root {
+  --bg:          #1a1a2e;
+  --bg-card:     #16213e;
+  --bg-card-back:#122652;
+  --accent:      #e94560;
+  --accent-dim:  #c73a52;
+  --text:        #eaeaea;
+  --text-dim:    #a0a0b0;
+  --matched:     #2ecc71;
+  --matched-glow:rgba(46,204,113,.35);
+
+  --accent-ghost:  rgba(233, 69, 96, 0.795);
+  --accent-faint:  rgba(233,69,96,.25);
+  --accent-mid:    rgba(233,69,96,.3);
+  --accent-bright: rgba(233,69,96,.4);
+  --white:         #fff;
+
+  --gap:         clamp(4px, 1.2vw, 8px);
+  --toolbar-h:   clamp(48px, 10vw, 64px);
+  --radius:      8px;
+
+  --cols:        4;          /* JS overrides this */
+}
+
+/* ───── Reset & Base ───── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/* ───── Screens ───── */
+.screen {
+  display: none;
+  flex-direction: column;
+  height: 100dvh;
+  height: 100dvh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+           env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.screen.active { display: flex; }
+
+/* ════════════════════════════════
+   GAME SCREEN
+   ════════════════════════════════ */
+#screen-game {
+  justify-content: space-between;
+}
+
+/* ───── Board ───── */
+#board {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: var(--gap);
+  padding: var(--gap);
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+}
+
+/* ───── Card ───── */
+.card {
+  width: 100%;
+  aspect-ratio: .8;
+  perspective: 600px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform .45s cubic-bezier(.4,.0,.2,1);
+  transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner,
+.card.matched .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Front — decorative back (face-down) */
+.card-front {
+  background: var(--bg-card-back);
+  border: 2px solid var(--accent-faint);
+}
+.card-front::after {
+  content: '漢';
+  font-size: clamp(1.2rem, 10vw, 2.4rem);
+  color: var(--accent-ghost);
+  pointer-events: none;
+}
+
+/* Back — kanji face (face-up) */
+.card-back {
+  background: var(--bg-card);
+  border: 2px solid var(--accent-bright);
+  transform: rotateY(180deg);
+  padding: 4%;
+}
+
+.card-back .kanji {
+  font-size: clamp(1.6rem, 10vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20%;
+}
+.card-back .romaji {
+  font-size: clamp(0.55rem, 4vw, 0.95rem);
+  color: var(--accent);
+  margin-top: 2px;
+  line-height: 1;
+}
+.card-back .meaning {
+  font-size: clamp(0.45rem, 4vw, 0.8rem);
+  color: var(--text-dim);
+  margin-top: 1px;
+  line-height: 1;
+}
+
+/* Corner buttons on card back */
+.card-btn {
+  position: absolute;
+  background: none;
+  border: none;
+  font-size: clamp(0.7rem, 2.8vw, 1.2rem);
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+  z-index: 2;
+  opacity: .55;
+  transition: opacity .2s;
+  touch-action: manipulation;
+}
+.card-btn:hover,
+.card-btn:focus-visible { opacity: 1; }
+
+.card-btn.fav   { top: 4%; left: 4%; }
+.card-btn.stroke{ top: 4%; right: 4%; }
+
+.card-btn.is-fav { opacity: 1; }
+
+/* ───── Matched state ───── */
+.card.matched .card-back {
+  border-color: var(--matched);
+  box-shadow: 0 0 12px var(--matched-glow);
+}
+.card.matched .card-back .kanji {
+  color: var(--matched);
+}
+.card.matched { cursor: default; }
+
+/* ───── Blank center tile ───── */
+.card-blank {
+  width: 100%;
+  aspect-ratio: .8;
+  visibility: hidden;
+}
+
+/* ───── Toolbar ───── */
+#toolbar {
+  display: flex;
+  justify-content: center;
+  gap: clamp(16px, 6vw, 40px);
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}
+
+#toolbar button {
+  width: var(--toolbar-h);
+  height: var(--toolbar-h);
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  background: var(--bg-card);
+  border: 2px solid var(--accent-mid);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  transition: background .2s, border-color .2s;
+}
+#toolbar button:active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ════════════════════════════════
+   SELECT SCREEN
+   ════════════════════════════════ */
+#screen-select {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.select-scroll {
+  padding: clamp(16px, 4vw, 32px);
+  padding-bottom: calc(32px + env(safe-area-inset-bottom));
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.select-scroll h2 {
+  font-size: clamp(0.8rem, 3vw, 1.1rem);
+  color: var(--text-dim);
+  margin: clamp(12px, 3vw, 24px) 0 clamp(6px, 1.5vw, 10px);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.select-scroll h2:first-child { margin-top: 0; }
+
+/* ───── Button rows ───── */
+.select-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(8px, 2vw, 14px);
+}
+
+.set-btn,
+.size-btn {
+  width: clamp(48px, 12vw, 72px);
+  height: clamp(48px, 12vw, 72px);
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  background: var(--bg-card);
+  border: 2px solid var(--accent-faint);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  transition: background .2s, border-color .2s, box-shadow .2s;
+}
+.set-btn:active,
+.size-btn:active {
+  transform: scale(.95);
+}
+
+/* Active / selected state */
+.set-btn.active,
+.size-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-bright);
+}
+
+/* Favourites disabled when empty */
+.set-btn.fav-btn.disabled {
+  opacity: .3;
+  pointer-events: none;
+}
+
+/* Size buttons — text instead of emoji */
+.size-btn {
+  font-size: clamp(0.65rem, 2.5vw, 0.9rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ───── Back button ───── */
+.back-btn {
+  display: block;
+  width: 100%;
+  margin-top: clamp(20px, 5vw, 36px);
+  padding: clamp(12px, 3vw, 18px);
+  font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+  font-weight: 600;
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background .2s, color .2s;
+}
+.back-btn:active {
+  background: var(--accent);
+  color: var(--white);
+}
+
+/* ════════════════════════════════
+   RESPONSIVE — wider screens
+   ════════════════════════════════ */
+@media (min-width: 600px) {
+  #board { gap: 10px; padding: 10px; }
+  .card-back .kanji { font-size: clamp(2rem, 6vw, 4rem); }
+}
+
+@media (min-width: 900px) {
+  #board { max-width: 600px; margin: 0 auto; }
+}

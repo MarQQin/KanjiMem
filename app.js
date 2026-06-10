@@ -10,8 +10,7 @@ const state = {
   flipped: [],       // indices of currently face-up unmatched
   matched: [],       // indices of matched pairs
   showAll: false,
-  favourites: new Set(JSON.parse(localStorage.getItem('favs') || '[]')),
-  lock: false        // prevents clicking during mismatch timeout
+  favourites: new Set(JSON.parse(localStorage.getItem('favs') || '[]'))
 };
 
 /* ── DOM refs ── */
@@ -139,13 +138,13 @@ $board.addEventListener('click', e => {
     if (action === 'fav') {
       toggleFavourite(kanji, btn);
     } else if (action === 'stroke') {
-      window.open('https://jisho.org/search/' + encodeURIComponent(kanji) + '%20%23kanji', '_blank');
+      window.open('https://jisho.org/search/' + encodeURIComponent(kanji) + '%20%23kanji', '_blank', 'noopener,noreferrer');
     }
     return;
   }
 
   // Handle card flip
-  if (state.lock || state.showAll) return;
+  if (state.showAll) return;
 
   const cardEl = e.target.closest('.card');
   if (!cardEl) return;
@@ -245,8 +244,10 @@ $btnBack.addEventListener('click', () => {
   $screenGame.classList.add('active');
 
   // Restart if selection changed
-  const setsChanged = state.selectedSets.length !== prevSets.length ||
-    state.selectedSets.some((s, i) => s !== [...prevSets].sort()[i]);
+  const sortedCur = [...state.selectedSets].sort();
+  const sortedPrev = [...prevSets].sort();
+  const setsChanged = sortedCur.length !== sortedPrev.length ||
+    sortedCur.some((s, i) => s !== sortedPrev[i]);
   const sizeChanged = state.boardSize !== prevSize;
 
   if (setsChanged || sizeChanged) {

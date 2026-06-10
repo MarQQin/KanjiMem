@@ -22,6 +22,7 @@
   --toolbar-h:   clamp(48px, 10vw, 64px);
   --radius:      8px;
 
+  --card-ar:     .8;         /* card width:height (slightly taller than wide) */
   --cols:        4;          /* JS overrides this */
 }
 
@@ -58,20 +59,35 @@ html, body {
 
 /* ───── Board ───── */
 #board {
-  flex: 1;
+  /* Don't let flex stretch the board past its aspect-ratio height */
+  flex: 0 1 auto;
+  min-height: 0;            /* allow shrinking inside flex column */
+  align-self: center;       /* centre horizontally */
+  margin: auto;             /* centre vertically in the leftover space */
   display: grid;
   grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows, var(--cols)), 1fr);
   gap: var(--gap);
   padding: var(--gap);
-  align-content: center;
-  justify-items: center;
-  align-items: center;
+  /* Cells follow the card aspect-ratio (0.8 → slightly taller than wide).
+     For an N×N board that makes the whole grid ~0.8 wide:tall too.
+     Cap by width AND height so it always fits the viewport. */
+  aspect-ratio: var(--card-ar, .8);
+  width: 100%;
+  max-width: min(
+    100%,
+    calc((100dvh - var(--toolbar-h) - 2 * var(--gap)) * var(--card-ar, .8))
+  );
+  place-content: stretch;
+  place-items: stretch;
 }
 
 /* ───── Card ───── */
 .card {
   width: 100%;
-  aspect-ratio: .8;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
   perspective: 600px;
   cursor: pointer;
   touch-action: manipulation;
@@ -181,7 +197,7 @@ html, body {
 /* ───── Blank center tile ───── */
 .card-blank {
   width: 100%;
-  aspect-ratio: .8;
+  height: 100%;
   visibility: hidden;
 }
 
@@ -318,5 +334,11 @@ html, body {
 }
 
 @media (min-width: 900px) {
-  #board { max-width: 600px; margin: 0 auto; }
+  /* Cap the board on large desktop screens (still height-aware) */
+  #board {
+    max-width: min(
+      600px,
+      calc((100dvh - var(--toolbar-h) - 2 * var(--gap)) * var(--card-ar, .8))
+    );
+  }
 }

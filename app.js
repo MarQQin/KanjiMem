@@ -92,6 +92,7 @@ function buildDeck() {
    ════════════════════════════════ */
 function renderBoard() {
   $board.style.setProperty('--cols', state.boardSize);
+  $board.style.setProperty('--rows', state.boardSize);
   $board.innerHTML = '';
 
   state.cards.forEach((card, idx) => {

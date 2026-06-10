@@ -7,7 +7,10 @@ const PRECACHE = [
   'data.js',
   'manifest.json',
   'icons/icon-192.svg',
-  'icons/icon-512.svg'
+  'icons/icon-192.png',
+  'icons/icon-180.png',
+  'icons/icon-512.svg',
+  'icons/icon-512.png'
 ];
 
 /* ---- Install: precache all app shell ---- */
@@ -52,6 +55,7 @@ self.addEventListener('fetch', event => {
       if (event.request.mode === 'navigate') {
         return caches.match('index.html');
       }
+      return Response.error();
     })
   );
 });

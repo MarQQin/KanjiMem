@@ -205,6 +205,13 @@ $board.addEventListener('click', e => {
 $btnShow.addEventListener('click', () => {
   state.showAll = !state.showAll;
 
+  // Clear any open, unmatched pair to keep state consistent
+  state.flipped.forEach(i => {
+    const el = $board.querySelector(`[data-index="${i}"]`);
+    if (el) el.classList.remove('flipped');
+  });
+  state.flipped = [];
+
   const allCards = $board.querySelectorAll('.card');
   allCards.forEach(el => {
     const idx = parseInt(el.dataset.index);

@@ -13,6 +13,11 @@ const state = {
   favourites: new Set(JSON.parse(localStorage.getItem('favs') || '[]'))
 };
 
+/* ── Language ── */
+const LANGS = ['de', 'en', 'fr'];
+const FLAGS = { de: '🇩🇪', en: '🇬🇧', fr: '🇫🇷' };
+let lang = localStorage.getItem('lang') || 'de';
+
 /* ── DOM refs ── */
 const $board      = document.getElementById('board');
 const $btnRestart = document.getElementById('btn-restart');
@@ -117,7 +122,7 @@ function renderBoard() {
           <button class="card-btn stroke" data-action="stroke" data-kanji="${card.kanji}">✍️</button>
           <div class="kanji">${card.kanji}</div>
           <div class="romaji">${card.romaji}</div>
-          <div class="meaning">${card.meaning}</div>
+          <div class="meaning">${card.meanings[lang] || card.meanings.de}</div>
         </div>
       </div>`;
 
@@ -198,6 +203,23 @@ $board.addEventListener('click', e => {
     state.flipped = [state.flipped[2]]; // keep only the newly clicked card
   }
 });
+
+/* ════════════════════════════════
+   STEP 13b — Language Toggle
+   ════════════════════════════════ */
+function updateMeanings() {
+  state.cards.forEach((card, i) => {
+    if (!card) return;
+    const el = $board.querySelector(`[data-index="${i}"] .meaning`);
+    if (el) el.textContent = card.meanings[lang] || card.meanings.de;
+  });
+}
+
+function setLanguage(newLang) {
+  lang = newLang;
+  localStorage.setItem('lang', lang);
+  updateMeanings();
+}
 
 /* ════════════════════════════════
    STEP 14 — Show / Hide All
@@ -311,6 +333,21 @@ function initSelectScreen() {
     btn.addEventListener('click', () => {
       state.boardSize = size;
       sizeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Language buttons
+  const langBtns = document.querySelectorAll('.lang-btn');
+  langBtns.forEach(btn => {
+    if (btn.dataset.lang === lang) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+    btn.addEventListener('click', () => {
+      setLanguage(btn.dataset.lang);
+      langBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     });
   });

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kanji-memory-v1';
+const CACHE_NAME = 'kanji-memory-v3';
 const PRECACHE = [
   './',
   'index.html',

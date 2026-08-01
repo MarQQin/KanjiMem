@@ -263,7 +263,8 @@ html, body {
 }
 
 .set-btn,
-.size-btn {
+.size-btn,
+.lang-btn {
   width: clamp(48px, 12vw, 72px);
   height: clamp(48px, 12vw, 72px);
   font-size: clamp(1.4rem, 5vw, 2rem);
@@ -279,13 +280,15 @@ html, body {
   transition: background .2s, border-color .2s, box-shadow .2s;
 }
 .set-btn:active,
-.size-btn:active {
+.size-btn:active,
+.lang-btn:active {
   transform: scale(.95);
 }
 
 /* Active / selected state */
 .set-btn.active,
-.size-btn.active {
+.size-btn.active,
+.lang-btn.active {
   background: var(--accent);
   border-color: var(--accent);
   box-shadow: 0 0 10px var(--accent-bright);
